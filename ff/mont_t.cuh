@@ -341,6 +341,25 @@ public:
     inline mont_t operator-() const
     {   return cneg(*this, true);   }
 
+    inline bool abs()
+    {
+        size_t i;
+        uint32_t tmp[n], ret;
+        const uint32_t* mod = MOD;
+
+        asm("sub.cc.u32 %0, %1, %2;" : "=r"(tmp[0]) : "r"(mod[0]), "r"(even[0]));
+        for (i = 1; i < n; i++)
+            asm("subc.cc.u32 %0, %1, %2;" : "=r"(tmp[i]) : "r"(mod[i]), "r"(even[i]));
+
+        ret = tmp[n-1] < even[n-1];
+
+        asm("{ .reg.pred %flag; setp.ne.u32 %flag, %0, 0;" :: "r"(ret));
+        for (i = 0; i < n; i++)
+            asm("@%flag mov.b32 %0, %1;" : "+r"(even[i]) : "r"(tmp[i]));
+        asm("}");
+
+        return ret;
+    }
 private:
     static inline void madc_n_rshift(uint32_t* odd, const uint32_t *a, uint32_t bi)
     {

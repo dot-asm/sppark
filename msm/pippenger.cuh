@@ -98,8 +98,12 @@ void breakdown(vec2d_t<uint32_t> digits, const scalar_t scalars[], size_t len,
 #endif
 
         // clear the most significant bit
+#if 0
         uint32_t msb = s[top_i] >> ((scalar_t::nbits - 1) % 32);
         s.cneg(msb);
+#else
+        uint32_t msb = s.abs();
+#endif
         msb <<= 31;
 
         scalar = s;
