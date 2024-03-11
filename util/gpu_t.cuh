@@ -107,6 +107,13 @@ public:
     inline void HtoD(T* dst, slice_t<U> src, size_t sz = sizeof(T)) const
     {   HtoD(dst, &src[0], src.size(), sz);   }
 
+    template<typename T>
+    inline void bzero(T* dst, size_t nelems) const
+    {   CUDA_OK(cudaMemsetAsync(dst, 0, nelems*sizeof(T), stream));   }
+    template<typename T>
+    inline void bzero(T& dst, size_t nelems) const
+    {   bzero(&dst, nelems);   }
+
     template<typename... Types>
     inline void launch_coop(void(*f)(Types...), dim3 gridDim, dim3 blockDim,
                                                 size_t shared_sz,
@@ -224,6 +231,13 @@ public:
     inline void HtoD(T& dst, const std::vector<U>& src,
                      size_t sz = sizeof(T)) const
     {   HtoD(&dst, &src[0], src.size(), sz);   }
+
+    template<typename T>
+    inline void bzero(T* dst, size_t nelems) const
+    {   zero.bzero(dst, nelems);   }
+    template<typename T>
+    inline void bzero(T& dst, size_t nelems) const
+    {   zero.bzero(&dst, nelems);   }
 
     template<typename... Types>
     inline void launch_coop(void(*f)(Types...), dim3 gridDim, dim3 blockDim,
