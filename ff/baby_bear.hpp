@@ -2,12 +2,16 @@
 // Licensed under the Apache License, Version 2.0, see LICENSE for details.
 // SPDX-License-Identifier: Apache-2.0
 
-#ifndef __SPPARK_FF_BABY_BEAR_HPP__
+#if (defined(__CUDACC__) || defined(__HIPCC__)) && \
+    !defined(__SPPARK_FF_BABY_BEAR_HPP__)
 #define __SPPARK_FF_BABY_BEAR_HPP__
 
-#ifdef __CUDACC__   // CUDA device-side field types
 # include <cassert>
-# include "mont32_t.cuh"
+# ifdef __CUDACC__  // CUDA device-side field types
+#  include "mont32_t.cuh"
+# else
+#  include "mont32_t.hip"
+# endif
 # define inline __device__ __forceinline__
 
 using bb31_base = mont32_t<31, 0x78000001, 0x77ffffff, 0x45dddde3, 0x0ffffffe>;
@@ -693,5 +697,4 @@ public:
 typedef bb31_t fr_t;
 typedef bb31_4_t fr4_t;
 
-#endif
 #endif
