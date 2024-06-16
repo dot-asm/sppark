@@ -249,7 +249,7 @@ public:
     ~NTTParameters()
     {
         int current_id;
-        cudaGetDevice(&current_id);
+        (void)cudaGetDevice(&current_id);
 
         gpu.select();
         gpu.Dfree(partial_twiddles);
@@ -264,7 +264,7 @@ public:
 
         gpu.Dfree(twiddles[1]);
 
-        cudaSetDevice(current_id);
+        (void)cudaSetDevice(current_id);
     }
 
     inline void sync() const    { gpu.sync(); }
@@ -277,7 +277,7 @@ private:
         all_params()
         {
             int current_id;
-            cudaGetDevice(&current_id);
+            (void)cudaGetDevice(&current_id);
 
             size_t nids = ngpus();
             forward.reserve(nids);
@@ -289,7 +289,7 @@ private:
             for (size_t id = 0; id < nids; id++)
                 inverse[id].sync();
 
-            cudaSetDevice(current_id);
+            (void)cudaSetDevice(current_id);
         }
     };
 
