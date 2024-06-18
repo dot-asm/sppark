@@ -59,9 +59,6 @@ fn main() {
 
     if env::var("DEP_SPPARK_TARGET").is_ok_and(|v| v.eq("rocm"))
     {
-        if !cfg!(feature = "gl64") && !cfg!(feature = "bb31") {
-            panic!("only gl64 and bb31 features are supported");
-        }
         env::set_var("HIP_PLATFORM", "amd");
         let mut hipcc = cc::Build::new();
         hipcc.compiler(env::var("HIPCC").unwrap_or("hipcc".to_string()));
