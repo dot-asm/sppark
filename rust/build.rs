@@ -165,22 +165,22 @@ fn main() {
             }
         }
 
-        if libpath.parent().is_some() {
-            let mut ccmd = cc::Build::new();
-            ccmd.compiler(hipcc);
-            ccmd.cpp(true);
-            ccmd.include(&base_dir);
-            ccmd.flag("-include").flag("util/cuda2hip.hpp");
-            ccmd.file(&all_gpus)
-                .compile("sppark_rocm");
-            println!("cargo:rustc-cfg=feature=\"rocm\"");
+        let mut ccmd = cc::Build::new();
+        ccmd.compiler(hipcc);
+        ccmd.cpp(true);
+        ccmd.include(&base_dir);
+        ccmd.flag("-include").flag("util/cuda2hip.hpp");
+        ccmd.file(&all_gpus)
+            .compile("sppark_rocm");
+        println!("cargo:rustc-cfg=feature=\"rocm\"");
 
+        if libpath.parent().is_some() {
             println!(
                 "cargo:rustc-link-search=native={}",
                 libpath.to_string_lossy()
             );
-            println!("cargo:rustc-link-lib=amdhip64");
-            println!("cargo:TARGET=rocm");
         }
+        println!("cargo:rustc-link-lib=amdhip64");
+        println!("cargo:TARGET=rocm");
     }
 }
