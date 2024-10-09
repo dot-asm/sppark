@@ -10,18 +10,20 @@ publish = false
 default = []
 # Compile in portable mode, without ISA extensions.
 # Binary can be executed on all systems.
-portable = [ "blst/portable" ]
+portable = ["blst/portable"]
 # Enable ADX even if the host CPU doesn't support it.
 # Binary can be executed on Broadwell+ and Ryzen+ systems.
-force-adx = [ "blst/force-adx" ]
+force-adx = ["blst/force-adx"]
 bls12_377 = []
 bls12_381 = []
-pallas = [ "semolina" ]
-vesta = [ "semolina" ]
+pallas = ["semolina"]
+vesta = ["semolina"]
 bn254 = []
 gl64 = []
 bb31 = []
 quiet = []
+cuda = ["sppark/cuda"]
+rocm = ["sppark/rocm"]
 
 [dependencies]
 blst = "~0.3.11"
@@ -35,7 +37,7 @@ cc = "^1.0.70"
 rand = "^0"
 ark-std = "0.3.0"
 ark-ff = "0.3.0"
-ark-poly = { version = "0.3.0", features = [ "parallel"] }
+ark-poly = { version = "0.3.0", features = ["parallel"] }
 ark-bls12-381 = { version = "0.3.0" }
 ark-bls12-377 = { version = "0.3.0" }
 ark-pallas = { version = "0.3.0" }

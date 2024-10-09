@@ -2,8 +2,6 @@
 // Licensed under the Apache License, Version 2.0, see LICENSE for details.
 // SPDX-License-Identifier: Apache-2.0
 
-#![allow(unexpected_cfgs)]
-
 // Declare C/C++ counterpart as following:
 // extern "C" { fn foobar(...) -> sppark::Error; }
 #[repr(C)]
@@ -56,7 +54,7 @@ macro_rules! cuda_error {
 }
 
 use core::ffi::c_void;
-#[cfg(any(feature = "cuda", feature = "rocm"))]
+#[cfg(feature = "_gpu")]
 use core::mem::transmute;
 
 #[repr(C)]
@@ -65,7 +63,7 @@ pub struct Gpu_Ptr<T> {
     phantom: core::marker::PhantomData<T>,
 }
 
-#[cfg(any(feature = "cuda", feature = "rocm"))]
+#[cfg(feature = "_gpu")]
 impl<T> Default for Gpu_Ptr<T> {
     fn default() -> Self {
         Self {
@@ -75,7 +73,7 @@ impl<T> Default for Gpu_Ptr<T> {
     }
 }
 
-#[cfg(any(feature = "cuda", feature = "rocm"))]
+#[cfg(feature = "_gpu")]
 impl<T> Drop for Gpu_Ptr<T> {
     fn drop(&mut self) {
         extern "C" {
@@ -86,7 +84,7 @@ impl<T> Drop for Gpu_Ptr<T> {
     }
 }
 
-#[cfg(any(feature = "cuda", feature = "rocm"))]
+#[cfg(feature = "_gpu")]
 impl<T> Clone for Gpu_Ptr<T> {
     fn clone(&self) -> Self {
         extern "C" {

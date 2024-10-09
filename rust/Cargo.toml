@@ -24,3 +24,9 @@ include = [
 [build-dependencies]
 cc = "^1.0.70"
 which = "^4.0"
+
+[features]
+cuda = ["_gpu"]
+rocm = ["_gpu"]
+# Internal feature, shouldn't be used directly
+_gpu = []
