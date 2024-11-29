@@ -17,8 +17,9 @@
 template <typename fr_t>
 class Add {
 public:
-    static const int CHUNK = 192 / sizeof(fr_t);
     using T = fr_t;
+    static const int CHUNK = 192 / sizeof(fr_t);
+    static_assert(CHUNK != 0, "field size is too large");
 
     __device__ __host__ __forceinline__
     fr_t operator()(const fr_t& a, const fr_t& b) const
@@ -32,8 +33,9 @@ public:
 template <typename fr_t>
 class Multiply {
 public:
-    static const int CHUNK = 128 / sizeof(fr_t);
     using T = fr_t;
+    static const int CHUNK = 128 / sizeof(fr_t);
+    static_assert(CHUNK != 0, "field size is too large");
 
     __device__ __host__ __forceinline__
     fr_t operator()(const fr_t& a, const fr_t& b) const
@@ -315,7 +317,8 @@ void prefix_op(OutPtr d_out, InPtr d_inp, size_t len, const stream_t& s,
     size_t blocks = (len + chunkSize - 1)/chunkSize;
 
     if (blocks <= (unsigned)gridDim) {
-        if (blocks <= (unsigned)gridDim/4) {
+        if ((Operation::CHUNK/4)*4 == Operation::CHUNK &&
+            blocks*4 <= (unsigned)gridDim) {
             // +70-90% improvement depending on field and GPU
             chunkSize = blockDim * Operation::CHUNK/4;
             gridDim = (int)((len + chunkSize - 1)/chunkSize);
@@ -323,7 +326,8 @@ void prefix_op(OutPtr d_out, InPtr d_inp, size_t len, const stream_t& s,
                           {gridDim, blockDim, WARP_SZ*sizeof(fr_t)},
                           d_out, d_inp, len);
             return;
-        } else if (blocks <= (unsigned)gridDim/2) {
+        } else if ((Operation::CHUNK/2)*2 == Operation::CHUNK &&
+                   blocks*2 <= (unsigned)gridDim) {
             // +20-40% improvement depending on field and GPU
             chunkSize = blockDim * Operation::CHUNK/2;
             gridDim = (int)((len + chunkSize - 1)/chunkSize);
@@ -331,10 +335,19 @@ void prefix_op(OutPtr d_out, InPtr d_inp, size_t len, const stream_t& s,
                           {gridDim, blockDim, WARP_SZ*sizeof(fr_t)},
                           d_out, d_inp, len);
             return;
+        } else if ((Operation::CHUNK*3/4)*4 == Operation::CHUNK*3 &&
+                   blocks*4 <= (unsigned)gridDim*3) {
+            // +10-20% improvement depending on field and GPU
+            chunkSize = blockDim * Operation::CHUNK*3/4;
+            gridDim = (int)((len + chunkSize - 1)/chunkSize);
+            s.launch_coop(d_prefix_op<Operation, Operation::CHUNK*3/4>,
+                          {gridDim, blockDim, WARP_SZ*sizeof(fr_t)},
+                          d_out, d_inp, len);
+            return;
         }
 
         gridDim = (int)blocks;
-    } else {
+    } else if ((Operation::CHUNK*3/4)*4 == Operation::CHUNK*3) {
         chunkSize = blockDim * (Operation::CHUNK*3/4);
         blocks = (len + chunkSize - 1)/chunkSize;
 
