@@ -102,7 +102,7 @@ jobs:
           mv Cargo.$$.toml Cargo.toml
           cargo update
           echo ---
-          cargo test --release --features=bls12_381,quiet --skip msm_fp2_correctness
+          cargo test --release --features=bls12_381,quiet -- --skip msm_fp2_correctness
           echo ---
           cargo test --release --features=bn254,quiet
           echo ---
