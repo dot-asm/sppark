@@ -189,8 +189,9 @@ jobs:
     - name: Install hipcc
       shell: bash
       run: |
-        sudo apt-get -qq update
-        sudo apt-get -qq install hipcc
+        sudo apt-get -qqq update
+        sudo apt-get -qqq install hipcc
+        echo
         hipcc --version
         amdgpu_arch=`hipcc -print-prog-name=amdgpu-arch`
         if [ -f $amdgpu_arch ]; then
