@@ -38,7 +38,7 @@ jobs:
         lscpu 2>/dev/null && echo --- || true
         env | sort
 
-    - name: Pull the docker image
+    - name: Pull the PantheonSim docker image
       shell: bash
       run: |
         docker pull ghcr.io/pantheongpu/pantheonsim
@@ -52,7 +52,7 @@ jobs:
         echo '    args+=("$arg")'                               >> ~/.local/bin/vgpu
         echo 'done'                                             >> ~/.local/bin/vgpu
         echo 'docker run --volume `pwd`:/pwd --workdir=/pwd \'  >> ~/.local/bin/vgpu
-        echo '       --env TEST_NPOW=${TEST_NPOW:-12} \'        >> ~/.local/bin/vgpu
+        echo '       --env TEST_NPOW=${TEST_NPOW:-13} \'        >> ~/.local/bin/vgpu
         echo '       --rm ghcr.io/pantheongpu/pantheonsim \'    >> ~/.local/bin/vgpu
         echo '       vgpu "${args[@]}"'                         >> ~/.local/bin/vgpu
         chmod a+x ~/.local/bin/vgpu
@@ -68,7 +68,7 @@ jobs:
         sudo apt-get -y install cuda-minimal-build-13-1
         [ -d /usr/local/cuda-13.1/bin ]
 
-    - name: Test-build poc/ntt-cuda with cuda-13.1
+    - name: Test poc/ntt-cuda with cuda-13.1
       shell: bash
       run: |
         rustc --version --verbose
@@ -90,17 +90,22 @@ jobs:
           cargo clean -p sppark --release
         )
 
-    - name: Test-build poc/msm-cuda with cuda-13.1
+    - name: Test poc/msm-cuda with cuda-13.1
       shell: bash
       run: |
         rustc --version --verbose
+        triplet=`rustc -vV | awk '/host:/ {print $2}' | tr 'a-z-' 'A-Z_'`
+        export CARGO_TARGET_${triplet}_RUNNER="vgpu run --gpu nvidia/t4"
         export PATH=$PATH:/usr/local/cuda-13.1/bin
         ( cd poc/msm-cuda
           sed "s/^crit/#crit/" Cargo.toml > Cargo.$$.toml && \
           mv Cargo.$$.toml Cargo.toml
           cargo update
-          cargo test --no-run --release --features=bls12_381,quiet
-          cargo test --no-run --release --features=bn254,quiet
+          echo ---
+          cargo test --release --features=bls12_381,quiet
+          echo ---
+          cargo test --release --features=bn254,quiet
+          echo ---
           cargo clean -p msm-cuda
           cargo clean -p msm-cuda --release
           cargo clean -p sppark
@@ -125,7 +130,7 @@ jobs:
             $amdgpu_arch
         fi
 
-    - name: Test-build poc/ntt-cuda with hipcc
+    - name: Test poc/ntt-cuda with hipcc
       shell: bash
       run: |
         rustc --version --verbose
