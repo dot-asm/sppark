@@ -189,7 +189,7 @@ jobs:
     - name: Install hipcc
       shell: bash
       run: |
-        sudo apt-get update
+        sudo apt-get -qq update
         sudo apt-get -qq install hipcc
         hipcc --version
         amdgpu_arch=`hipcc -print-prog-name=amdgpu-arch`
@@ -215,7 +215,7 @@ jobs:
           cargo clean -p ntt-cuda --release
         )
 
-    - name: Test-build Go bridge with rocm
+    - name: Test-build Go bridge
       shell: bash
       run: |
         go version
