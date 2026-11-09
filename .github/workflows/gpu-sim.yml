@@ -71,12 +71,14 @@ jobs:
       shell: bash
       run: |
         rustc --version --verbose
+        triplet=`rustc -vV | awk '/host:/ {print $2}' | tr 'a-z-' 'A-Z_'`
+        export CARGO_TARGET_${triplet}_RUNNER="vpgu run"
         export PATH=$PATH:/usr/local/cuda-13.1/bin
         ( cd poc/ntt-cuda
           cargo update
           cargo test --no-run --release --features=bls12_381
           cargo test --no-run --release --features=gl64
-          cargo test --no-run --release --features=bb31
+          cargo test --release --features=bb31
           cargo clean -p ntt-cuda
           cargo clean -p ntt-cuda --release
           cargo clean -p sppark
