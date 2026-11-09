@@ -55,7 +55,6 @@ jobs:
         echo '       --rm ghcr.io/pantheongpu/pantheonsim \'    >> ~/.local/bin/vgpu
         echo '       vgpu "${args[@]}"'                         >> ~/.local/bin/vgpu
         chmod a+x ~/.local/bin/vgpu
-        cat ~/.local/bin/vgpu
         vgpu list-gpus
 
     - name: Install cuda-minimal-build-13-0
@@ -78,17 +77,6 @@ jobs:
           cargo test --no-run --release --features=bls12_381
           cargo test --no-run --release --features=gl64
           cargo test --no-run --release --features=bb31
-          if which clang++ 2>/dev/null; then
-              echo
-              echo Testing with clang++
-              echo
-              clang++ --version
-              echo
-              export CXX=clang++
-              cargo test --no-run --release --features=bls12_381
-              cargo test --no-run --release --features=gl64
-              cargo test --no-run --release --features=bb31
-          fi
           cargo clean -p ntt-cuda
           cargo clean -p ntt-cuda --release
         )
@@ -104,16 +92,6 @@ jobs:
           cargo update
           cargo test --no-run --release --features=bls12_381,quiet
           cargo test --no-run --release --features=bn254,quiet
-          if which clang++ 2>/dev/null; then
-              echo
-              echo Testing with clang++
-              echo
-              clang++ --version
-              echo
-              export CXX=clang++
-              cargo test --no-run --release --features=bls12_381,quiet
-              cargo test --no-run --release --features=bn254,quiet
-          fi
           cargo clean -p msm-cuda
           cargo clean -p msm-cuda --release
         )
