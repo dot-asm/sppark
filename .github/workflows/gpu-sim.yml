@@ -52,6 +52,7 @@ jobs:
         echo '    args+=("$arg")'                               >> ~/.local/bin/vgpu
         echo 'done'                                             >> ~/.local/bin/vgpu
         echo 'docker run --volume `pwd`:/pwd --workdir=/pwd \'  >> ~/.local/bin/vgpu
+        echo '       --env TEST_NPOW=${TEST_NPOW:-12} \'        >> ~/.local/bin/vgpu
         echo '       --rm ghcr.io/pantheongpu/pantheonsim \'    >> ~/.local/bin/vgpu
         echo '       vgpu "${args[@]}"'                         >> ~/.local/bin/vgpu
         chmod a+x ~/.local/bin/vgpu
