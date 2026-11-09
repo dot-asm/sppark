@@ -73,7 +73,7 @@ jobs:
       run: |
         rustc --version --verbose
         triplet=`rustc -vV | awk '/host:/ {print $2}' | tr 'a-z-' 'A-Z_'`
-        export CARGO_TARGET_${triplet}_RUNNER="vpgu run --gpu nvidia/t4"
+        export CARGO_TARGET_${triplet}_RUNNER="vgpu run --gpu nvidia/t4"
         export PATH=$PATH:/usr/local/cuda-13.1/bin
         ( cd poc/ntt-cuda
           cargo update
