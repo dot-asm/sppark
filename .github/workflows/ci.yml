@@ -71,6 +71,8 @@ jobs:
           fi
           cargo clean -p ntt-cuda
           cargo clean -p ntt-cuda --release
+          cargo clean -p sppark
+          cargo clean -p sppark --release
         )
 
     - name: Test-build poc/msm-cuda with cuda-12.9
@@ -96,6 +98,8 @@ jobs:
           fi
           cargo clean -p msm-cuda
           cargo clean -p msm-cuda --release
+          cargo clean -p sppark
+          cargo clean -p sppark --release
         )
 
     - name: Test-build Go bridge with cuda-12.9
@@ -125,6 +129,8 @@ jobs:
           cargo test --no-run --release --features=bb31
           cargo clean -p ntt-cuda
           cargo clean -p ntt-cuda --release
+          cargo clean -p sppark
+          cargo clean -p sppark --release
         )
 
     - name: Test-build poc/msm-cuda with cuda-11.8
@@ -140,6 +146,8 @@ jobs:
           cargo test --no-run --release --features=bn254,quiet
           cargo clean -p msm-cuda
           cargo clean -p msm-cuda --release
+          cargo clean -p sppark
+          cargo clean -p sppark --release
         )
 
     - name: Clean up
@@ -214,6 +222,8 @@ jobs:
           cargo test --no-run --release --features=bb31
           cargo clean -p ntt-cuda
           cargo clean -p ntt-cuda --release
+          cargo clean -p sppark
+          cargo clean -p sppark --release
         )
 
     - name: Test-build Go bridge
