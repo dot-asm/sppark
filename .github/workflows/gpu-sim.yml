@@ -124,7 +124,7 @@ jobs:
       run: |
         rustc --version --verbose
         triplet=`rustc -vV | awk '/host:/ {print $2}' | tr 'a-z-' 'A-Z_'`
-        export CARGO_TARGET_${triplet}_RUNNER="vpgu run --gpu amd/mi250x"
+        export CARGO_TARGET_${triplet}_RUNNER="vgpu run --gpu amd/mi250x"
         ( cd poc/ntt-cuda
           cargo update
           cargo test --no-run --release --features=bls12_381
