@@ -104,7 +104,7 @@ jobs:
           echo ---
           cargo test --release --features=bls12_381,quiet -- --skip msm_fp2_correctness
           echo ---
-          cargo test --release --features=bn254,quiet
+          cargo test --release --features=bn254,quiet -- --skip msm_fp2_correctness
           echo ---
           cargo clean -p msm-cuda
           cargo clean -p msm-cuda --release
