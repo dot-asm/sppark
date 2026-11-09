@@ -42,7 +42,7 @@ jobs:
       shell: bash
       run: |
         docker pull ghcr.io/pantheongpu/pantheonsim
-        docker run --rm pantheonsim
+        docker run --rm ghcr.io/pantheongpu/pantheonsim
         echo '#!/bin/bash'                                      >  ~/.local/bin/vgpu
         echo 'args=()'                                          >> ~/.local/bin/vgpu
         echo 'for arg in "$@"; do'                              >> ~/.local/bin/vgpu
