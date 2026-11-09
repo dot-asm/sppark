@@ -129,7 +129,7 @@ jobs:
           cargo update
           cargo test --no-run --release --features=bls12_381
           cargo test --no-run --release --features=gl64
-          cargo test --no-run --release --features=bb31
+          cargo test --release --features=bb31
           cargo clean -p ntt-cuda
           cargo clean -p ntt-cuda --release
           cargo clean -p sppark
