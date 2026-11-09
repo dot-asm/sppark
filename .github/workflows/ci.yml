@@ -197,6 +197,8 @@ jobs:
             sudo rm $amdgpu_arch
             echo "#!/bin/sh\necho gfx1100\necho gfx908" | sudo tee $amdgpu_arch
             sudo chmod a+x $amdgpu_arch
+            cat $amdgpu_arch
+            $amdgpu_arch
         fi
 
     - name: Test-build poc/ntt-cuda
